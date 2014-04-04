@@ -1,0 +1,44 @@
+STUDY       DATA SET 5 - B AND C FIXED - S:(AXBXC) DESIGN - RUN 2
+COMMENT
+COMMENT     # RECORDS = 32
+COMMENT     # VALUES/RECORD = 1
+COMMENT
+EFFECT      + A 2 0
+EFFECT      + B 2 2
+EFFECT      + C 2 2
+EFFECT      * S:ABC 4 0
+FORMAT      (F3.0)
+PROCESS
+  3
+  6
+  3
+  3
+  4
+  5
+  4
+  3
+  7
+  8
+  7
+  6
+  7
+  8
+  9
+  8
+  1
+  2
+  2
+  2
+  2
+  3
+  4
+  3
+  5
+  6
+  5
+  6
+ 10
+ 10
+  9
+ 11
+FINISH
