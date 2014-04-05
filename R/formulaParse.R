@@ -1,4 +1,3 @@
-
 library(reshape2)
 library(testthat)
 library(stringr)
@@ -10,7 +9,42 @@ initialClean <- function(formula) {
     rhs <- str_replace_all(rhs, " ", "") # get rid of all spaces
 }
 
-rhs <- initialClean(ex2)
+assignLetters <- function(facets) {
+    ## Assigns single letters to facet names
+
+    firstletters <- toupper(substr(facets, 1, 1))
+    dupes <- duplicated(firstletters)
+    if(any(dupes)) {
+        remaining <- setdiff(LETTERS, firstletters)
+        firstletters[dupes] <- remaining[1:sum(dupes)]
+    }
+
+    structure(firstletters, names = facets)
+}
+
+## Get the facet names from the right-hand side of a formula
+
+getFacetNames <- function(rhs) {
+    firstpass <- str_split(rhs, "[\\)\\(\\*:]")[[1]] ## remove other stuff
+    firstpass[nchar(firstpass) > 0]  ## remove stray blank strings
+}
+
+gformula <- function(formula) {
+    value.var <- as.character(formula[[2]])
+    rhs <- initialClean(formula)
+
+    facetletters <- assignLetters(getFacetNames(rhs))
+
+    letform <- rhs
+
+    for(i in 1:length(facetletters)) {
+        letform <- str_replace_all(letform, names(facetletters)[i], facetletters[i])
+    }
+
+    backv <- rev(strsplit(letform, "")[[1]])
+    return(backv)
+}
+
 
 ##' Split by top level of parens (can extend this function to be more
 ##' general, once I figure out how to do more parens.
@@ -25,17 +59,7 @@ parenSplit <- function(x) {
     str_split(rhs, "[\\)\\(]")[[1]][-1]
 }
 
-spl <- parenSplit(rhs)
-cstarts <- str_sub(spl, 1, 1) == ":"
-neststart <- which(diff(cstarts) == 1)
 
-neststop <- which(diff(cstarts) == -1)
-
-if(length(neststart) > length(neststop))
-    ## This happens if the last item(s) are nested
-    neststop <- c(neststop, length(spl))
-
-nests <- cbind(neststart, neststop)
 
 ##' Idea: isn't everything organized from right to left?  Doesn't that
 ##' ordering basically always work? Then, the only tricky part is

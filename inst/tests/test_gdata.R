@@ -1,5 +1,5 @@
 doit <- gdata(data = test1.reordered, response = "value",
-              gspecify = c(Person = "P", Task = "T", Item = "I:T"),
+              gspecify = c(Person = "P", Task = "T:P", Item = "I:P"),
               object = "P", digits = 0)
 gfile(doit, "doesitwork")
 grun("doesitwork", "out")
