@@ -35,7 +35,6 @@ gdata <- function(data, response, gspecify, sampsizes = NA,
     if(is.na(sampsizes))
         sampsizes <- sapply(facets, function(x) length(unique(x))) # count number
 
-
     resp <- data[do.call(order, facets), response] # extract response and order by each facet
 
     resp.r <- round(resp, digits)
@@ -47,9 +46,17 @@ gdata <- function(data, response, gspecify, sampsizes = NA,
     if(!all(widths == width))
         warning("String lengths for output are not all equal.  This will throw off GENOVA.")
 
-    formatstr <- sprintf("(%iF%i.%i)", length(resp.char), width, digits)
+    ## Put into character matrix by first facet
+    resp.mat <- matrix(resp.char, nrow = sampsizes[1], byrow = T)
 
-    structure(list(process = resp.char, gspecify = gspecify, 
+    ## Add one extra level of padding to front and between numbers to make readable
+    resp.mat[,1] <- paste0(" ", resp.mat[,1])
+    resp.out <- apply(resp.mat, MARGIN = 1, function(x) paste(x, collapse = " "))
+    width <- width + 1 # since we've boosted the width in this process
+
+    formatstr <- sprintf("(%iF%i.%i)", ncol(resp.mat), width, digits)
+
+    structure(list(process = resp.out, gspecify = gspecify, 
                    object = object, formatstr = formatstr,
                    sampsizes = structure(sampsizes, names = fnames),
                    popsizes = structure(popsizes, names = fnames)),

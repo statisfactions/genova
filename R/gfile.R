@@ -18,7 +18,7 @@ pad11 <- function(x) {
 gEffect <- function(gdata) {
     ## Number of each facet in the record layout
     nfacets <- length(gdata$gspecify)
-    prefixes <- c(rep("+", nfacets - 1), "*") # gdata makes starred facet last place
+    prefixes <- c("*", rep("+", nfacets - 1)) # gdata makes starred facet FIRST place
     
     paste(pad11("EFFECT"), prefixes, gdata$gspecify, gdata$sampsizes, gdata$popsizes)
 }
@@ -43,10 +43,12 @@ gD <- function(gdata, Ds = NULL) {
         Ds <- gdata$sampsizes
     }
 
+    prefixes <- ifelse(gdata$gspecify %in% gdata$object, "$", " ")
+
     Dchar <- as.character(Ds)
     Dchar[gdata$gspecify %in% gdata$object] <- ""
     c("DSTUDY", 
-      paste(pad11("DEFFECT"), gdata$gspecify, Ds),
+      paste(pad11("DEFFECT"), prefixes, gdata$gspecify, Dchar),
       "ENDDSTUDY", "FINISH")
 }
 

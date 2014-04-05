@@ -1,3 +1,10 @@
+doit <- gdata(data = test1.reordered, response = "value",
+              gspecify = c(Person = "P", Task = "T", Item = "I:T"),
+              object = "P", digits = 0)
+gfile(doit, "doesitwork")
+grun("doesitwork", "out")
+
+
 context("gdata")
 
 write.csv(melty, file = "/home/fortis/genova/inst/testdata/test1.csv", row.names = F)
@@ -33,4 +40,6 @@ test_that("gEffect matches expected effects", {
                  
 
 
-
+mat <- doit$process
+mat[, 1] <- paste0(" ", mat[1])
+mat
