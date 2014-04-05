@@ -15,12 +15,22 @@ out <- structure(list(process = as.character(test1$value),
                       popsizes = c(Person = 0, Task = 0, Item = 0)),
                  class = c("gdata", "list"))
 
-test_that("gdata correctly converts GENOVA simple run 1 data", {
     doit <- gdata(data = test1.reordered, response = "value",
                   gspecify = c(Person = "P", Task = "T", Item = "I:T"),
                   object = "P", digits = 0)
+
+test_that("gdata correctly converts GENOVA simple run 1 data", {
     expect_equal(doit, out)
 }
           )
+
+  
+testeff <- c("EFFECT      + P 10 0", "EFFECT      + T 3 0", "EFFECT      * I:T 4 0")
+
+test_that("gEffect matches expected effects", {
+    expect_equal(gEffect(doit), testeff)
+})
+                 
+
 
 
